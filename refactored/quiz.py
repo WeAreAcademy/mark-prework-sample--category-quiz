@@ -3,7 +3,6 @@ import time
 
 lives = 3
 score = 0
-difficulty = 0
 t = 3
 clue = 3
 
@@ -121,31 +120,23 @@ def print_welcome():
     - You have 3 seconds to look at the jumbled word
     - Then it will disappear and you will then be able to guess
   """)
-  
-def play_game():
-  print_welcome()
 
-  while len(categories) > 0 and lives > 0:
-    category = choose_category()
-    while len(categories[category]) > 0 and lives > 0:
-      # random_selection(category)
+def play_category(category, difficulty):
+  while len(categories[category]) > 0 and lives > 0:
       word_to_guess = get_word(category)
       jumbled_word = jumble(word_to_guess)
       print (dashes)
       print("What " + category.title() + " is this?")
-      global difficulty
       if difficulty >= 1:
         countdown(t, jumbled_word)
         print("*******POOOOF*******")
       else:
         print (*jumbled_word, sep='') 
         #the * brings it out of the list, then sep removes the spaces/commas
-      guess = input("Answer: ")
-      guess = guess.upper()
+      guess = input("Answer: ").upper()
 
       if guess == word_to_guess:
         print ("Got It!")
-        #then remove this answer from the list
         time.sleep(0.5)
         remove_answer(category, word_to_guess) 
         score_increase()
@@ -156,6 +147,14 @@ def play_game():
         new_guess(word_to_guess)
         remove_answer(category, word_to_guess)
         score_increase()
+  
+def play_game():
+  difficulty = 0
+  print_welcome()
+
+  while len(categories) > 0 and lives > 0:
+    category = choose_category()
+    play_category(category, difficulty)
 
     del categories[category]
     difficulty += 1
