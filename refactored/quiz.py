@@ -121,20 +121,22 @@ def print_welcome():
     - Then it will disappear and you will then be able to guess
   """)
 
+def give_starting_point(difficulty, jumbled_word):
+  if difficulty >= 1:
+      countdown(t, jumbled_word)
+      print("*******POOOOF*******")
+  else:
+      print (*jumbled_word, sep='') 
+      #the * brings it out of the list, then sep removes the spaces/commas
+
 def play_category(category, difficulty):
   while len(categories[category]) > 0 and lives > 0:
       word_to_guess = get_word(category)
       jumbled_word = jumble(word_to_guess)
       print (dashes)
       print("What " + category.title() + " is this?")
-      if difficulty >= 1:
-        countdown(t, jumbled_word)
-        print("*******POOOOF*******")
-      else:
-        print (*jumbled_word, sep='') 
-        #the * brings it out of the list, then sep removes the spaces/commas
-      guess = input("Answer: ").upper()
-
+      give_starting_point(difficulty,jumbled_word)
+      guess = input("Your guess: ").upper()
       if guess == word_to_guess:
         print ("Got It!")
         time.sleep(0.5)
