@@ -136,6 +136,22 @@ def display_update(score, lives, category, category_name):
         print(f"That's the end of category {category_name}")
 
 
+# Play one given category, asking questions from it until completed or no lives left.
+# Returns a tuple of the updated counts of score and lives (possibly zero)
+
+
+def play_category(category, category_name, lives, score):
+    while len(category) > 0 and lives > 0:
+        (answer, jumble) = pick_random_question(category)
+        display_question(category_name, jumble)
+        lives = handle_guesses(answer, lives)
+
+        if lives > 0:
+            score += 1
+            display_update(score, lives, category, category_name)
+    return lives, score
+
+
 # Play the entire game
 
 
@@ -148,15 +164,7 @@ def play():
 
     while len(categories) > 0 and lives > 0:
         (category, category_name) = get_category_choice(categories)
-
-        while len(category) > 0 and lives > 0:
-            (answer, jumble) = pick_random_question(category)
-            display_question(category_name, jumble)
-            lives = handle_guesses(answer, lives)
-
-            if lives > 0:
-                score += 1
-                display_update(score, lives, category, category_name)
+        (lives, score) = play_category(category, category_name, lives, score)
 
     # At the end, either because lives exhausted or because all categories were completed.
     if (lives > 0):
