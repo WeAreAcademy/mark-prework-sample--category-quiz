@@ -74,7 +74,7 @@ def display_intro():
 
 def display_question(category_name, jumble):
     print(dashes)
-    print("What " + category_name.title() + " is this?")
+    print(f"What {category_name.title()} is this?")
     print(jumble)
 
 # Return the user's guess
@@ -89,7 +89,7 @@ def say_wrong(has_used_clue, lives):
         print("Wrong!  Even with a clue, LOL...")
     else:
         print("Wrong!")
-    print("Number of lives remaining: ", lives)
+    print(f"Number of lives remaining: {lives}")
 
 
 # Handle user guessing (and clue-giving) for the given question
@@ -128,12 +128,12 @@ def create_categories():
 
 
 def display_update(score, lives, category, category_name):
-    print("Your score is: ", score, "and you have", lives, "lives remaining.")
+    print(f"Your score is: {score} and you have {lives} lives remaining.")
     rounds_remaining = len(category)
     if rounds_remaining > 0:
-        print(len(category), "rounds remain in the category", category_name)
+        print(f"{len(category)} rounds remain in the category {category_name}")
     else:
-        print("That's the end of category", category_name)
+        print(f"That's the end of category {category_name}")
 
 
 # Play the entire game
