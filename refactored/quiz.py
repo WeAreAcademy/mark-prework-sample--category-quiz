@@ -129,6 +129,20 @@ def give_starting_point(difficulty, jumbled_word):
       print (*jumbled_word, sep='') 
       #the * brings it out of the list, then sep removes the spaces/commas
 
+def handle_guess(guess, word_to_guess, category):
+  if guess == word_to_guess:
+      print ("Got It!")
+      time.sleep(0.5)
+      remove_answer(category, word_to_guess) 
+      score_increase()
+      time.sleep(0.5)
+  else:
+      life_wrong()
+      clue_func(word_to_guess)
+      new_guess(word_to_guess)
+      remove_answer(category, word_to_guess)
+      score_increase()
+
 def play_category(category, difficulty):
   while len(categories[category]) > 0 and lives > 0:
       word_to_guess = get_word(category)
@@ -137,18 +151,7 @@ def play_category(category, difficulty):
       print("What " + category.title() + " is this?")
       give_starting_point(difficulty,jumbled_word)
       guess = input("Your guess: ").upper()
-      if guess == word_to_guess:
-        print ("Got It!")
-        time.sleep(0.5)
-        remove_answer(category, word_to_guess) 
-        score_increase()
-        time.sleep(0.5)
-      else:
-        life_wrong()
-        clue_func(word_to_guess)
-        new_guess(word_to_guess)
-        remove_answer(category, word_to_guess)
-        score_increase()
+      handle_guess(guess, word_to_guess, category)
   
 def play_game():
   difficulty = 0
