@@ -95,64 +95,65 @@ def choose_category():
   while user_input not in categories:
     user_input = input("Select from list above: ").upper()
   
+def play_game():
+  print (
+    """             
+    Welcome to the Academy Anagram Game!
+    👋 """)
 
-#################################Live Code##########################################
+  print (
+    """ 
+    HOW TO COMPLETE THE GAME:
+    - Choose a category.
+    - Unscramble the jumbled word and type out your guess.
+    - If you get it wrong, not to worry, you can get a clue!
+    - Guess all the words from each category!
+    - However, be careful not to get too many wrong! 
+    - NOTE: YOU ONLY HAVE 3 LIVES!👀
+    \n
+    INCREASED DIFFICULTY:
+    - Difficulty increases when you transition to the next category
+    - You have 3 seconds to look at the jumbled word
+    - Then it will disappear and you will then be able to guess
+  """)
 
-print (
-  """             
-  Welcome to the Academy Anagram Game!
-  👋 """)
+        
+  while len(categories) > 0 and lives > 0:
+    choose_category()
+    while len(categories[user_input]) > 0 and lives > 0:
+      random_selection()
+      print (dashes)
+      print("What " + user_input.title() + " is this?")
+      global difficulty
+      if difficulty >= 1:
+        countdown(t)
+        print("*******POOOOF*******")
+      else:
+        print (*jumble, sep='') 
+        #the * brings it out of the list, then sep removes the spaces/commas
+      guess = input("Answer: ")
+      guess = guess.upper()
 
-print (
-  """ 
-  HOW TO COMPLETE THE GAME:
-  - Choose a category.
-  - Unscramble the jumbled word and type out your guess.
-  - If you get it wrong, not to worry, you can get a clue!
-  - Guess all the words from each category!
-  - However, be careful not to get too many wrong! 
-  - NOTE: YOU ONLY HAVE 3 LIVES!👀
-  \n
-  INCREASED DIFFICULTY:
-  - Difficulty increases when you transition to the next category
-  - You have 3 seconds to look at the jumbled word
-  - Then it will disappear and you will then be able to guess
-""")
+      if guess == answer:
+        print ("Got It!")
+        #then remove this answer from the list
+        time.sleep(0.5)
+        remove_answer() 
+        score_increase()
+        time.sleep(0.5)
+      else:
+        life_wrong()
+        clue_func()
+        new_guess()
+        remove_answer()
+        score_increase()
 
-      
-while len(categories) > 0 and lives > 0:
-  choose_category()
-  while len(categories[user_input]) > 0 and lives > 0:
-    random_selection()
-    print (dashes)
-    print("What " + user_input.title() + " is this?")
-  
-    if difficulty >= 1:
-      countdown(t)
-      print("*******POOOOF*******")
-    else:
-      print (*jumble, sep='') 
-      #the * brings it out of the list, then sep removes the spaces/commas
-    guess = input("Answer: ")
-    guess = guess.upper()
+    del categories[user_input]
+    difficulty += 1
 
-    if guess == answer:
-      print ("Got It!")
-      #then remove this answer from the list
-      time.sleep(0.5)
-      remove_answer() 
-      score_increase()
-      time.sleep(0.5)
-    else:
-      life_wrong()
-      clue_func()
-      new_guess()
-      remove_answer()
-      score_increase()
+  print("\nCONGRATULATIONS, you've reached the end of the game!")
 
-  del categories[user_input]
-  difficulty += 1
+  print(f"Your final score is {score} and you had {lives} lives remaining.\n\n\n")
 
-print("\nCONGRATULATIONS, you've reached the end of the game!")
 
-print(f"Your final score is {score} and you had {lives} lives remaining.\n\n\n")
+play_game()
