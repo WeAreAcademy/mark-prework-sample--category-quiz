@@ -4,7 +4,6 @@ import time
 lives = 3
 score = 0
 t = 3
-clue = 3
 
 dashes = ("\n---------------------------------------------------")
 
@@ -16,10 +15,9 @@ categories = {
   "CODING LANGUAGES": ["PYTHON", "JAVASCRIPT", "JAVA", "TYPESCRIPT", "RUBY", "C"]
   }
 
-# This function removes the correct answer from the dictionary
+# This function removes the correct answer from the categories dictionary
 def remove_answer(category, word_to_guess):
-  val_to_del = word_to_guess
-  categories[category].remove(val_to_del)
+  categories[category].remove(word_to_guess)
   print(len(categories[category]), " rounds remaining.")
 
 # This function counts down time from 3 seconds and then clears the jumble word
@@ -37,15 +35,6 @@ def score_increase():
   global score
   score += 1
   print("Your score is: ", score)
-  
-# This function randomly selects a word from the chosen category and jumbles it
-# def random_selection(category):
-#   selection = random.choice(categories[category])
-#   global answer
-#   answer = selection
-#   global jumble
-#   jumble = list(selection)
-#   random.shuffle(jumble)
 
 def get_word(category):
   return random.choice(categories[category])
@@ -56,34 +45,33 @@ def jumble(word):
   return to_jumble
 
 # This function asks you if you want a clue and gives you a clue
-def clue_func(word_to_guess):
-  global clue_choice
-  clue_choice = input("Wrong answer!!! \nWould you like a Clue, yes/no: ").lower()
-  if clue_choice == "yes" or clue_choice == "y":
-    
+def give_clue(word_to_guess):
+  clue_input = input("Wrong answer!!! \nWould you like a Clue, yes/no: ").lower()
+  wants_clue = (clue_input == "yes" or clue_input == "y")
+  if wants_clue:
     print(f"The first letter of the word is {word_to_guess[0]}")
+  return wants_clue
 
 # This function asks user to guess again if answer is wrong
-def new_guess(word_to_guess):
+def new_guess(word_to_guess, wants_clue):
   new_guess = input("Guess again: ").upper()
   while new_guess != word_to_guess:
-    life_wrong()
-    global clue_choice
-    if clue_choice == "yes" or clue_choice == "y":
+    lose_life()
+    if wants_clue:
       new_guess = input(f"Even with a clue, LOL...guess again: ").upper()
     else:
       new_guess = input(f"Guess again: ").upper()
-  print("\n")
+  return new_guess
 
 # This function removes a life if you get an answer wrong
-def life_wrong():
+def lose_life():
   global lives
   lives -= 1
   print(f"You got this wrong! You have {lives} lives remaining")
   if lives == 0:
     print("\n No juice left in the tank \n\n!!!!!!GAME OVER!!!!!!")
     time.sleep(1)
-    print(f"Your final score is {score} and you had {lives} lives remaining.\n\n\n")
+    print(f"Your final score is {score}.\n\n\n")
     # print(end_game)
     exit()
 
@@ -129,19 +117,22 @@ def give_starting_point(difficulty, jumbled_word):
       print (*jumbled_word, sep='') 
       #the * brings it out of the list, then sep removes the spaces/commas
 
+def handle_right_answer(category, word_to_guess):
+  print ("Got It!")
+  time.sleep(0.5)
+  remove_answer(category, word_to_guess) 
+  score_increase()
+  time.sleep(0.5)
+
 def handle_guess(guess, word_to_guess, category):
   if guess == word_to_guess:
-      print ("Got It!")
-      time.sleep(0.5)
-      remove_answer(category, word_to_guess) 
-      score_increase()
-      time.sleep(0.5)
+      handle_right_answer(category,word_to_guess)
   else:
-      life_wrong()
-      clue_func(word_to_guess)
-      new_guess(word_to_guess)
-      remove_answer(category, word_to_guess)
-      score_increase()
+      lose_life()
+      wants_clue = give_clue(word_to_guess)
+      next_guess = new_guess(word_to_guess, wants_clue)
+      if next_guess == word_to_guess:
+        handle_right_answer(category, word_to_guess)
 
 def play_category(category, difficulty):
   while len(categories[category]) > 0 and lives > 0:
