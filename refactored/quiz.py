@@ -30,21 +30,23 @@ def countdown(t, jumbled_word):
     time.sleep(1) 
     t -= 1
 
-# This function increases score if the question is answered correctly
+# Increases score and prints new score
 def score_increase():
   global score
   score += 1
   print("Your score is: ", score)
 
+# Randomly chooses a word from the chosen category
 def get_word(category):
   return random.choice(categories[category])
 
-def jumble(word):
+# Shuffles the letters in a word
+def jumble_word(word):
   to_jumble = list(word)
   random.shuffle(to_jumble)
   return to_jumble
 
-# This function asks you if you want a clue and gives you a clue
+# Asks you if you want a clue and gives you a clue if so
 def give_clue(word_to_guess):
   clue_input = input("Wrong answer!!! \nWould you like a Clue, yes/no: ").lower()
   wants_clue = (clue_input == "yes" or clue_input == "y")
@@ -52,8 +54,8 @@ def give_clue(word_to_guess):
     print(f"The first letter of the word is {word_to_guess[0]}")
   return wants_clue
 
-# This function asks user to guess again if answer is wrong
-def new_guess(word_to_guess, wants_clue):
+# Asks user to guess again
+def get_later_guess(word_to_guess, wants_clue):
   new_guess = input("Guess again: ").upper()
   while new_guess != word_to_guess:
     lose_life()
@@ -63,20 +65,20 @@ def new_guess(word_to_guess, wants_clue):
       new_guess = input(f"Guess again: ").upper()
   return new_guess
 
-# This function removes a life if you get an answer wrong
+# Removes a life and checks if ran out of lives
 def lose_life():
   global lives
   lives -= 1
+  # TODO: make the word life dynamic - eg 1 life, 2 lives ...
   print(f"You got this wrong! You have {lives} lives remaining")
   if lives == 0:
     print("\n No juice left in the tank \n\n!!!!!!GAME OVER!!!!!!")
     time.sleep(1)
     print(f"Your final score is {score}.\n\n\n")
-    # print(end_game)
     exit()
 
 
-#This function asks the player to select a category
+# Asks user to pick category
 def choose_category():
   print("\nSelect a category out of:")
   for key in categories:
@@ -87,6 +89,7 @@ def choose_category():
     user_input = input("Select from list above: ").upper()
   return user_input
 
+# Prints welcome and instructions
 def print_welcome():
   print (
     """             
@@ -109,6 +112,7 @@ def print_welcome():
     - Then it will disappear and you will then be able to guess
   """)
 
+# Prints jumbled word (and hides it if difficulty higher)
 def give_starting_point(difficulty, jumbled_word):
   if difficulty >= 1:
       countdown(t, jumbled_word)
@@ -117,6 +121,7 @@ def give_starting_point(difficulty, jumbled_word):
       print (*jumbled_word, sep='') 
       #the * brings it out of the list, then sep removes the spaces/commas
 
+# Calls other functions to hadnle correct answer
 def handle_right_answer(category, word_to_guess):
   print ("Got It!")
   time.sleep(0.5)
@@ -124,26 +129,29 @@ def handle_right_answer(category, word_to_guess):
   score_increase()
   time.sleep(0.5)
 
+# Checks if guess is correct and calls functions for each option
 def handle_guess(guess, word_to_guess, category):
   if guess == word_to_guess:
       handle_right_answer(category,word_to_guess)
   else:
       lose_life()
       wants_clue = give_clue(word_to_guess)
-      next_guess = new_guess(word_to_guess, wants_clue)
+      next_guess = get_later_guess(word_to_guess, wants_clue)
       if next_guess == word_to_guess:
         handle_right_answer(category, word_to_guess)
 
+# Governs the play of a single category
 def play_category(category, difficulty):
   while len(categories[category]) > 0 and lives > 0:
       word_to_guess = get_word(category)
-      jumbled_word = jumble(word_to_guess)
+      jumbled_word = jumble_word(word_to_guess)
       print (dashes)
       print("What " + category.title() + " is this?")
       give_starting_point(difficulty,jumbled_word)
       guess = input("Your guess: ").upper()
       handle_guess(guess, word_to_guess, category)
   
+# Overall game
 def play_game():
   difficulty = 0
   print_welcome()
@@ -156,8 +164,7 @@ def play_game():
     difficulty += 1
 
   print("\nCONGRATULATIONS, you've reached the end of the game!")
-
   print(f"Your final score is {score} and you had {lives} lives remaining.\n\n\n")
 
-
+# Executes the main game function
 play_game()
