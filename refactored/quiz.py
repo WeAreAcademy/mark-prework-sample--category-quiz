@@ -94,8 +94,8 @@ def choose_category():
   user_input = input("Category Choice: ").upper()
   while user_input not in categories:
     user_input = input("Select from list above: ").upper()
-  
-def play_game():
+
+def print_welcome():
   print (
     """             
     Welcome to the Academy Anagram Game!
@@ -116,8 +116,10 @@ def play_game():
     - You have 3 seconds to look at the jumbled word
     - Then it will disappear and you will then be able to guess
   """)
+  
+def play_game():
+  print_welcome()
 
-        
   while len(categories) > 0 and lives > 0:
     choose_category()
     while len(categories[user_input]) > 0 and lives > 0:
