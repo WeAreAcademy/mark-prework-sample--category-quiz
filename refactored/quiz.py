@@ -18,13 +18,13 @@ categories = {
   }
 
 # This function removes the correct answer from the dictionary
-def remove_answer():
+def remove_answer(category):
   global answer # global keyword allows you to modify/use the variable outside of the current scope
   val_to_del = answer
-  for key in categories[user_input]: 
-    if val_to_del in categories[user_input]:
-      categories[user_input].remove(val_to_del)
-  print(len(categories[user_input]), " rounds remaining.")
+  for key in categories[category]: 
+    if val_to_del in categories[category]:
+      categories[category].remove(val_to_del)
+  print(len(categories[category]), " rounds remaining.")
 
 # This function counts down time from 3 seconds and then clears the jumble word
 def countdown(t): 
@@ -43,8 +43,8 @@ def score_increase():
   print("Your score is: ", score)
   
 # This function randomly selects a word from the chosen category and jumbles it
-def random_selection():
-  selection = random.choice(categories[user_input])
+def random_selection(category):
+  selection = random.choice(categories[category])
   global answer
   answer = selection
   global jumble
@@ -90,10 +90,10 @@ def choose_category():
   for key in categories:
     print(key.title())
   print(dashes)
-  global user_input
   user_input = input("Category Choice: ").upper()
   while user_input not in categories:
     user_input = input("Select from list above: ").upper()
+  return user_input
 
 def print_welcome():
   print (
@@ -121,11 +121,11 @@ def play_game():
   print_welcome()
 
   while len(categories) > 0 and lives > 0:
-    choose_category()
-    while len(categories[user_input]) > 0 and lives > 0:
-      random_selection()
+    category = choose_category()
+    while len(categories[category]) > 0 and lives > 0:
+      random_selection(category)
       print (dashes)
-      print("What " + user_input.title() + " is this?")
+      print("What " + category.title() + " is this?")
       global difficulty
       if difficulty >= 1:
         countdown(t)
@@ -140,17 +140,17 @@ def play_game():
         print ("Got It!")
         #then remove this answer from the list
         time.sleep(0.5)
-        remove_answer() 
+        remove_answer(category) 
         score_increase()
         time.sleep(0.5)
       else:
         life_wrong()
         clue_func()
         new_guess()
-        remove_answer()
+        remove_answer(category)
         score_increase()
 
-    del categories[user_input]
+    del categories[category]
     difficulty += 1
 
   print("\nCONGRATULATIONS, you've reached the end of the game!")
